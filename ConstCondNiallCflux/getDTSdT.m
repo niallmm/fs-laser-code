@@ -14,8 +14,17 @@ function [ DTdTOut ] = getDTSdT(Temp, State)
         error('crap');
     end
 
- 
-    DTdTOut = zeros(K,1);
+  
+KTsol = getKappaThermdT(Temp,State)*10; % make the diffusion constant consistant with 
+                            %the thermal diffusivity it was normalized by
+                            %10 so we multiply by 10 to make it correct
+                            %dimensions
+                            
+Cp = 2414e3; %J/(K m^3) % specific heat at melting temp of crystaline
+Dbar = 1e-7; %m/s factor by which we normalize diffusion constants
+
+DTdTOut = KTsol./(Cp.*Dbar);
+%     DTdTOut = zeros(K,1);
 
 
 

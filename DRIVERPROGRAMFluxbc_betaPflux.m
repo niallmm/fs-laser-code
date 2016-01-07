@@ -4,7 +4,7 @@
 %clear all; close all;
 
 
-foldername = ['8April2015_pflux20%minus_betatest'];%
+foldername = ['05Jan2016Testing'];%
 % Pflux = 2.5*0.6;
 % Pfluxsweep = 0.6*2.5*[0.9, 1.1];
 % Pfluxsweep = 0.6*2*0.9; %[0.9, 1.1];

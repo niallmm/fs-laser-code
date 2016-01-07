@@ -15,7 +15,7 @@ global Tmelt
     end
  
  
-KTsol = getKappaTherm(1,1)*10; % make the diffusion constant consistant with 
+KTsol = getKappaTherm(Temp,State)*10; % make the diffusion constant consistant with 
                             %the thermal diffusivity it was normalized by
                             %10 so we multiply by 10 to make it correct
                             %dimensions
@@ -23,8 +23,8 @@ KTsol = getKappaTherm(1,1)*10; % make the diffusion constant consistant with
 Cp = 2414e3; %J/(K m^3) % specific heat at melting temp of crystaline
 Dbar = 1e-7; %m/s factor by which we normalize diffusion constants
 
-DT = KTsol/(Cp*Dbar);
+DTOut = KTsol/(Cp*Dbar);
  
-DTOut = DT*ones(K,1);
+% DTOut = DT*ones(K,1);
 end
 
