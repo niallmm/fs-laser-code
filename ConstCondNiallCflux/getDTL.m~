@@ -1,0 +1,27 @@
+function [ DTOut ] = getDTL(Temp, Conc)
+%global decaylength %DTOutSave
+% global DTliq
+    % compute the therman diffusion constant in the liquid
+    % IN: Conc(1:K)
+    
+
+    K=length(Temp);
+    if (length(Conc)~=K )
+        error('crap');
+    end
+
+% KTliq = 1.4 J/(K s cm) = 140 J/(K s m)
+% Cp = 2400e3; %J/(K m^3) % specific heat at melting temp of crystaline
+% Dbar = 1e-7; %m/s factor by which we normalize diffusion constants
+% 
+% DT = KTliq/(Cp*Dbar);
+    
+DTliq = 608.59; % this is the 
+
+DTOut = DTliq*ones(K,1);
+
+
+
+
+end
+

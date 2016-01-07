@@ -1,0 +1,26 @@
+function [ DTOut ] = getDTS(Temp, State)
+%global decaylength
+global Tmelt
+% ASSUME: The diffusion constant in the SOLID is independent of the solute
+% concentration
+% compute the therman diffusion constant
+    % IN: Temp(1:K)
+    % IN: State(1:K)
+%    global tau0 L0
+  
+    K=length(Temp);
+%    if (length(Conc)~=K | length(State)~=K)
+    if (length(State)~=K)
+        error('crap');
+    end
+ 
+ 
+KTsol = getKappaTherm(1,1); % make the diffusion constant consistant with 
+                            %the thermal diffusivity
+Cp = 2400e3; %J/(K m^3) % spe
+Dbar = 1e-7;
+
+DT = KTsol*10/(Cp*Dbar);
+DTOut = DT*ones(K,1);
+end
+
