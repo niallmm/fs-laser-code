@@ -18,7 +18,7 @@ L1 = 1;  % liquid solid boundary in the rescaled coordinates
 % K2 = 402; % no of point in the solid phase (for temperature)
   K2 = 904;
 L2 = 4e3; % infinity ;-)
-% L2 = 8e3;
+%  L2 = 8e3;
 Z = K1 + K2;
 
 % [liquid domain, solid domain] - have point x=1 twice to simplify
@@ -66,8 +66,8 @@ maxIterNewton = 2;
 maxSteps = 5e5;
 
 % DEBUG
-%deltaTsave = 5e-4;
-deltaTsave = 2e-2;
+deltaTsave = 5e-4;
+% deltaTsave = 2e-2;
 
 min_h_resold = 1e-3; % stop calculation when h is smaller than this value
 % NOTE there is an additional hard coded cutpff at 0.99* hIC 

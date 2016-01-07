@@ -4,21 +4,15 @@
 %clear all; close all;
 
 
-foldername = ['05Jan2016Testing'];%
-% Pflux = 2.5*0.6;
-% Pfluxsweep = 0.6*2.5*[0.9, 1.1];
-% Pfluxsweep = 0.6*2*0.9; %[0.9, 1.1];
+foldername = ['07Jan2016betasweep'];%
+
 mkdir(foldername)
-% beta = 4.1355e+08; % interpolated from 50 nm melt depth
-%beta = 4.2283e8; % interpolated from 5 ns total melt time
-%beta = 4.547e8; % interpolated from 5 ns resolidifcation time
-%betasweep = [linspace(5e8, 1e9, 10) linspace(1.5e9, 5e9, 5)];
-%Pfluxsweep = 0.6*linspace(1.8, 2.7, 10)
-%betasweep = 7.1e8; %, 3e8];
+
+betasweep = linspace(2e8, 5e8, 10); 
 
 % for sweep2 = 1:length(Pfluxsweep)
-   for sweep1 = 1%:length(betasweep)
-        beta = 2e8;% betasweep(sweep1);
+   for sweep1 = 2:length(betasweep)
+         beta =  betasweep(sweep1);
         Pflux = 0.6*2.4;% Pfluxsweep(sweep2)
         sweep2 = 1;
 
@@ -315,7 +309,7 @@ toc
 %    end
 end
 summary = strcat(foldername, '/summary_pflux', fluxn, '.mat');
-save(summary,'betasweep', 'Pfluxsweep', 'meltdepth', 'timetomelt', ...
+save(summary,'betasweep', 'meltdepth', 'timetomelt', ...
     'meltingtime_lowerbound', 'resolidvel', 'T0vec', 'L_tempvec')
 % end
 rmpath(materialpropDir)
