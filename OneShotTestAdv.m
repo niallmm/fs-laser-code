@@ -70,7 +70,7 @@ uold=uIC;
 
 solidflag = false; % indicate that we are resolidifying (hdot <0)
 
-
+size(uIC)
 % for output purposes
 %hverst = zeros(500,2); % preaccolacte memory
 %Tathsaved = zeros(500,3);
@@ -92,7 +92,9 @@ for ii = 1:maxSteps % MAIN LOOP
         success = true ;
         if (success) ; 
             time_NND = t+dt/2;
+                       size(uold)
             [guess2, success] = IFunc(uold, dt/2) ; 
+ 
         end ;
         if (success) ; 
             time_NND = t+dt;

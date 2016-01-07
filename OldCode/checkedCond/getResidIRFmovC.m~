@@ -1,0 +1,40 @@
+function [ResIRFmovC] = getResidIRFmovC(oldh,hguess,dt,phi,TintOld,TintGuess,CintLold,CintLguess,CintSold,CintSguess, stateSold,stateSguess)% TO DO CODING OF A verson
+% INTERFACE RESPONSE FUNCTIONS
+
+% (b) jump in the concentration - in the documentation
+% \tilde{g}  (only relevant for resolidification part - \dot{h} < 0
+% function of hdot, interface Temp, concentrations a interface and the
+% state (amorphous / crystaline) of the solid
+
+
+% Here we need the real data - for now a 'fake' version
+%fakeparam = 1e0;
+%ResIRFmovC = CintLguess./sqrt(fakeparam) - sqrt(fakeparam)*CintSguess;
+%
+%ResIRFmovC = (oldh-hguess)*CintLguess - fakeparam*CintSguess;
+
+%ResIRFmovC = 0;%CintSguess;
+
+% =======================================
+% Equilibrium Cond.
+% =======================================
+
+%  kappa = 1; %find papers k(hdot, CL, CS) 
+% % 
+%  ResIRFmovC = CintLguess./sqrt(kappa) - sqrt(kappa)*CintSguess;
+
+
+% =======================================
+% Non - Equilibrium Cond.
+% =======================================
+% note: in our units V_D = 1
+
+kappaE = 1e-4;
+ResIRFmovC = - (hguess - oldh) * (CintSguess - CintLguess) ...
+                             * (CintSold - CintLold) ...
+    + dt * (   phi    * (CintSguess - kappaE * CintLguess) ...
+                                    * (CintSold - CintLold) ...
+            + (1-phi) * (CintSold   - kappaE * CintLold)  ...
+                                    * (CintSguess - CintLguess) ...
+           );
+       

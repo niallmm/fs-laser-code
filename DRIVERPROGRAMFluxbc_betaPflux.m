@@ -4,7 +4,7 @@
 %clear all; close all;
 
 
-foldername = ['8April2015_pflux20%minus_betatest'];%
+foldername = ['test'];%
 % Pflux = 2.5*0.6;
 % Pfluxsweep = 0.6*2.5*[0.9, 1.1];
 % Pfluxsweep = 0.6*2*0.9; %[0.9, 1.1];
@@ -19,7 +19,7 @@ mkdir(foldername)
 % for sweep2 = 1:length(Pfluxsweep)
    for sweep1 = 1%:length(betasweep)
         beta = 1.3e9;% betasweep(sweep1);
-        Pflux = 0.6*2*0.8;% Pfluxsweep(sweep2)
+        Pflux = 0.6*2.5;% Pfluxsweep(sweep2)
         sweep2 = 1;
 
     tic
