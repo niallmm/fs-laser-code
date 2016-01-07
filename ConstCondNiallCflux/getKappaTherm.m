@@ -30,18 +30,10 @@ function [ KappaThermOut ] = getKappaTherm(Temp, State)
 b = -0.004181;
 c = 2.338;
 % Kout  = a*exp(b*Tempn)+c;
+KappaThermOut(State==1) = 14;
+KappaThermOut(State==2) = a*exp(b*Temp(State==2))+c;
 
-for ii = 1:K
-    if State(ii) ==1
-        KappaThermOut(ii) = 14.0; % liquid
-    elseif State(ii)==2
-     %   KappaThermOut(ii) =  2.2; % solid crystaline
-     
-%      KappaThermOut(ii) = interp1(Tempvec, Kappavec, Temp(ii), 'linear', 'extrap');
-        KappaThermOut(ii) = a*exp(b*Temp(ii))+c;
 
-    end
-end
         
 
 
