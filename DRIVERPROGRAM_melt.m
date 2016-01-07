@@ -4,20 +4,23 @@
 %clear all; close all;
 
 
-foldername = ['8April2015_pflux10error'];%
-Pflux = 2.5*0.6;
-Pfluxsweep = 0.6*2.5*[0.9, 1.1];
+foldername = ['8April2015_pflux20%minus_betatest'];%
+% Pflux = 2.5*0.6;
+% Pfluxsweep = 0.6*2.5*[0.9, 1.1];
+% Pfluxsweep = 0.6*2*0.9; %[0.9, 1.1];
 mkdir(foldername)
 % beta = 4.1355e+08; % interpolated from 50 nm melt depth
 %beta = 4.2283e8; % interpolated from 5 ns total melt time
 %beta = 4.547e8; % interpolated from 5 ns resolidifcation time
-betasweep = linspace(3e8, 1e9, 20);
+%betasweep = [linspace(5e8, 1e9, 10) linspace(1.5e9, 5e9, 5)];
 %Pfluxsweep = 0.6*linspace(1.8, 2.7, 10)
+%betasweep = 7.1e8; %, 3e8];
 
-for sweep2 = 1:length(Pfluxsweep)
-    for sweep1 = 1:length(betasweep)
-        beta = betasweep(sweep2)
-        Pflux = Pfluxsweep(sweep2)
+% for sweep2 = 1:length(Pfluxsweep)
+   for sweep1 = 1%:length(betasweep)
+        beta = 5e9;% betasweep(sweep1);
+        Pflux = 0.6*2.5;% Pfluxsweep(sweep2)
+        sweep2 = 1;
 
     tic
 global xmesh xlabmesh K1 K2 K3 plotflag plotflagIC plotflag_BBC Mu1nm Aparam
@@ -58,45 +61,55 @@ T0 = Tpulse*(alpha+beta*I0)*I0/(Cp*1385);
 L_temp = 1e-9/(alpha+1.9*I0*beta);
 
 global TintFct_global TintInvLam_global
-[TintFct_global,TintInvLam_global] = setupInitTempNonlinAbs(Pflux, beta, alpha);
+[junk,TintInvLam_global] = setupInitTempNonlinAbs(Pflux, beta, alpha);
 
+TintFct_global = @(x)setupInitTempNonlinAbs_w10electrons(x, Pflux, beta, alpha);
 % Mu1nm = 37.0; %amorphous
 Mu1nm = 92; % crystaline
 % Aparam = 37.84; % Amorphous
 Aparam = 32.92; %crystaline
 % Aparam = 80;
 
-Tsurface_GTF = TintFct_global(0.0);
+Tsurface_GTF = TintFct_global(0.0)
 SetUpParametersIncMat(Tsurface_GTF);
 DT = getDTL(Tsurface_GTF,0);
 
 figure(234)
-xtemp = linspace(0,5000,100);
-plot(xtemp, log(TintFct_global(xtemp)));
+xtemp = linspace(0,5000,1e5);
+semilogy(xtemp, TintFct_global(xtemp));
 hold on
 
+% define critical threshold where 10% electrons are excited.
+Ncrit = (5e21)*1e6; % 1/cm^3 (cm^-3 = 1e6 m^-3) 10% electrons
+hv = 1.55*1.6e-22; % eV (eV = 1.6e-22 kJ) energy of an electron
+Cp = 2410; % kJ/(K m^3) Cp at ~ 1640 K
+Tambiant = 300;  %K
+
+Tcrit = Ncrit*hv/Cp/(Tmelt - Tambiant);
+ncrit = find(TintFct_global(xtemp)>Tcrit, 1, 'last');
+hIC = xtemp(ncrit);
 
 % Try to 'guess' a good TimeFinal - Idea: to leading order the velocity is
 % given by the IRF evaluated at the surface temperature - that gives an
 % upper bound for the velocity. The melting threshold should really be
 % simply Tsurface >=1
-
-global ParamMu_STA % from the short time asymptotics 
-Tsurface_GTF = TintFct_global(0.0);
-hdot_GTF = ParamMu_STA .* (Tsurface_GTF - 1.0);
-targeth_GTF = 0.02; % This is the target thickness at which e switch - we will get something smaller bc we overestimate the velocity
-
-
-if (hdot_GTF > 0)
-   
-    TimeFinal = targeth_GTF./hdot_GTF
-    
-else
-    
-    error('below melting threshold')
-end
-
-pause(1)
+% 
+% global ParamMu_STA % from the short time asymptotics 
+% Tsurface_GTF = TintFct_global(0.0);
+% hdot_GTF = ParamMu_STA .* (Tsurface_GTF - 1.0);
+% targeth_GTF = 0.02; % This is the target thickness at which e switch - we will get something smaller bc we overestimate the velocity
+% 
+% 
+% if (hdot_GTF > 0)
+%    
+%     TimeFinal = targeth_GTF./hdot_GTF
+%     
+% else
+%     
+%     error('below melting threshold')
+% end
+% 
+% pause(1)
 
 
 % getTempLabAtFiniteTime returns
@@ -106,12 +119,13 @@ pause(1)
 % 3. Linfty which is the cutoff for the x-> infty integrals in the
 % Greens-fct formulation. Note that evaluating the returned function for x
 % larger than maybe 0.5 * Linfty becomes problematic
-addpath('./shortTimeAsymp/')
-
-[FunctTIC_x_lab,hIC,Linfty] = getTempLabAtFiniteTime(TimeFinal);
+% addpath('./shortTimeAsymp/')
+% 
+% [FunctTIC_x_lab,hIC,Linfty] = getTempLabAtFiniteTime(TimeFinal);
 
 % NEW adapt the mesh in lab space
-Lright=10 ; % CHANGE!!! % slightly larger than maximal meldting depth
+Lright=7 ; % CHANGE!!! % slightly larger than maximal meldting depth
+Linfty = Lright;
 
 xlabmesh = getXlabMesh(K3,Lright,K1,hIC);
 
@@ -119,26 +133,28 @@ xlabmesh = getXlabMesh(K3,Lright,K1,hIC);
 % CHECK parameters.....
 % hIC*L2 has to be large enough. Conditions
 % A1: >> sqrt(4 D TimeFinal - already coded as threshold for h/sqrt(t)
-
-global thresh_check_faraway_BBC
-
-%hIC./sqrt(TimeFinal) ./ thresh_check_faraway_BBC
-check = hIC./sqrt(TimeFinal) <  thresh_check_faraway_BBC;
-%pause
-
-if(check)
-   hIC./sqrt(TimeFinal) 
-   thresh_check_faraway_BBC
-   fprintf('Transition time from the asymptitics to the full code TimeFinal is too short. Or L2 too small.') 
-
-   incL2 = thresh_check_faraway_BBC/(hIC./sqrt(TimeFinal) )
-   pause(3)
-   %   error('Transition time from the asymptitics to the full code TimeFinal is too short. Or L2 too small.') 
-end
+% 
+% global thresh_check_faraway_BBC
+% 
+% %hIC./sqrt(TimeFinal) ./ thresh_check_faraway_BBC
+% check = hIC./sqrt(TimeFinal) <  thresh_check_faraway_BBC;
+% %pause
+% 
+% if(check)
+%    hIC./sqrt(TimeFinal) 
+%    thresh_check_faraway_BBC
+%    fprintf('Transition time from the asymptitics to the full code TimeFinal is too short. Or L2 too small.') 
+% 
+%    incL2 = thresh_check_faraway_BBC/(hIC./sqrt(TimeFinal) )
+%    pause(3)
+%    %   error('Transition time from the asymptitics to the full code TimeFinal is too short. Or L2 too small.') 
+% end
 
 indexExtrapolate = find(hIC*xmesh <0.5*Linfty,1,'last');
-TIC(1:indexExtrapolate,1) = FunctTIC_x_lab(hIC*xmesh(1:indexExtrapolate));
+TIC(1:indexExtrapolate,1) = TintFct_global(hIC*xmesh(1:indexExtrapolate));
 TIC(indexExtrapolate+1:K1+K2) = TintFct_global(hIC*xmesh(indexExtrapolate+1:K1+K2));
+
+TimeFinal =0.1;
 
 % check the initial temperature
 % B1: no jump at indexExtrapolate
@@ -150,9 +166,9 @@ jumpDer   = (TIC(indexExtrapolate+1) - TIC(indexExtrapolate)) ./ (xmesh(indexExt
 
 check = abs((finiteDer - jumpDer)./finiteDer) < 0.1;
 
-if(~check)
-   error('maybe nonsmooth initial temperature') 
-end
+% if(~check)
+%    error('maybe nonsmooth initial temperature') 
+% end
 
 end
 %error('test')
@@ -286,16 +302,16 @@ end
 global L2
 minDepthBC = hIC*L2
 % 2.2 metl depth
-meltdepth(sweep2) = hmax
+meltdepth(sweep2, sweep1) = hmax
 % 2.3 time to melt
-timetomelt(sweep2) = tmax
-T0vec(sweep2) = T0;
-L_tempvec(sweep2)= L_temp;
+timetomelt(sweep2, sweep1) = tmax
+T0vec(sweep2, sweep1) = T0;
+L_tempvec(sweep2, sweep1)= L_temp;
 
 % 2.4 whole meting time -> Yu-Ting's data (NOTE: lower bound bc we don't
 % integrate until h=0 -> if accurate number is needed -> extrapolate to h=0
-meltingtime_lowerbound(sweep2) = tend
-resolidvel(sweep2) = hmax/(tend-tmax)
+meltingtime_lowerbound(sweep2,sweep1) = tend
+resolidvel(sweep2, sweep1) = hmax/(tend-tmax)
 %   filenumber2 =sprintf('%d', sweep2);
 %   filenumber = sprintf('%d', sweep);
   betan = sprintf('%0.2e', beta);
@@ -310,9 +326,9 @@ resolidvel(sweep2) = hmax/(tend-tmax)
          'Mu1nm', 'Aparam', 'DT', 'vdglobal',  'cflux', 'T0', 'L_temp', 'meltdepth')
     
 toc
-    end
+%    end
 end
-summary = strcat(foldername, '/summary_pflux', fluxn);
+summary = strcat(foldername, '/summary_pflux', fluxn, '.mat');
 save(summary,'betasweep', 'Pfluxsweep', 'meltdepth', 'timetomelt', ...
     'meltingtime_lowerbound', 'resolidvel', 'T0vec', 'L_tempvec')
 % end
