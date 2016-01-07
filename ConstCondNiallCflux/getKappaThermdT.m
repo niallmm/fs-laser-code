@@ -8,15 +8,23 @@ function [ KappaThermdTOut ] = getKappaThermdT(Temp, State)
     if (length(State)~=K)
         error
     end
-    
-    Tempvec = [273 300 350 400 500 600 700 800 900 1000 1100 1200 1300 1400 ...
-        1500 1600 1685];
-    Kappavec = [1.68 1.48 1.19 0.989 0.762 0.619 0.508 0.422 0.359 0.312 ...
-        0.279 0.257 0.244 0.235 0.227 0.221 0.220]*10;
-    delta = [diff(Kappavec)./diff(Tempvec) 0];
-    Temp2 = [(Tempvec(1:end-1)+Tempvec(2:end))/2 2500];
+%     
+%     Tempvec = [273 300 350 400 500 600 700 800 900 1000 1100 1200 1300 1400 ...
+%         1500 1600 1685];
+%     Kappavec = [1.68 1.48 1.19 0.989 0.762 0.619 0.508 0.422 0.359 0.312 ...
+%         0.279 0.257 0.244 0.235 0.227 0.221 0.220]*10;
+%     delta = [diff(Kappavec)./diff(Tempvec) 0];
+%     Temp2 = [(Tempvec(1:end-1)+Tempvec(2:end))/2 2500];
 
-    KappaThermdTOut = interp1(Temp2, delta, Temp, 'linear', 'extrap');
+%     KappaThermdTOut = interp1(Temp2, delta, Temp, 'linear', 'extrap');
+ a = 43.56;
+b = -0.004181;
+c = 2.338;
+
+% Kout  = a*exp(b*Temp)+c;
+KappaThermdTOut = zeros(size(Temp));
+KappaThermdTOut(State==2) = a*b*exp(b*Temp(State==2));
+KappaThermdTOut(State==1) = 0;
 
 
 end

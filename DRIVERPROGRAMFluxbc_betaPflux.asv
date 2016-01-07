@@ -24,7 +24,7 @@ mkdir(foldername)
 
     tic
 global xmesh xlabmesh K1 K2 K3 plotflag plotflagIC plotflag_BBC Mu1nm Aparam
-plotflag = 0; % Output of the time integratiom: 0: no output, 1: time integration 2: only for debugging
+plotflag = 1; % Output of the time integratiom: 0: no output, 1: time integration 2: only for debugging
 plotflagIC = 0; % Output for the Short Time Asymptotics
 plotflag_BBC = 1;% Output for the temperature bulk BC during resolidification
 
@@ -141,7 +141,7 @@ end
 indexExtrapolate = find(hIC*xmesh <0.5*Linfty,1,'last');
 TIC(1:indexExtrapolate,1) = FunctTIC_x_lab(hIC*xmesh(1:indexExtrapolate));
 TIC(indexExtrapolate+1:K1+K2) = TintFct_global(hIC*xmesh(indexExtrapolate+1:K1+K2));
-TIC(indexExtrapolate) = 0.5*(TIC(indexExtrapolate-1)+TIC(indexExtrapolate+1));
+TIC(indexExtrapolate) = 0.5(
 % check the initial temperature
 % B1: no jump at indexExtrapolate
 

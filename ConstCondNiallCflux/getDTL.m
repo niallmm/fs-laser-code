@@ -10,7 +10,7 @@ function [ DTOut ] = getDTL(Temp, Conc)
         error('crap');
     end
 
-KTliq = getKappaTherm(Temp,zeros(size(Temp)))*10; % make the diffusion constant consistant with 
+KTliq = getKappaTherm(Temp,ones(size(Temp)))*10; % make the diffusion constant consistant with 
                             %the thermal diffusivity it was normalized by
                             %10 so we multiply by 10 to make it correct
                             % dimensions state = 0 give liquid

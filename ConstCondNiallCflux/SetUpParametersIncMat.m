@@ -13,10 +13,10 @@ global Dconst_STA alphaParam_STA Linfty_STA maxRelError_STA ParamMu_STA  quadgkR
 % generate mesh
 % =========================================================================
 % K1 = 400; % no of points in the liquid phase
-K1 = 800;
+K1 = 900;
 L1 = 1;  % liquid solid boundary in the rescaled coordinates
 % K2 = 402; % no of point in the solid phase (for temperature)
-  K2 = 804;
+  K2 = 904;
 L2 = 4e3; % infinity ;-)
 % L2 = 8e3;
 Z = K1 + K2;
@@ -96,7 +96,7 @@ Aparam = 32.92; % \Theta * \kappa_T^\star / (\bar{D} L_V)
 %Aparam = 37.84; % Amorphous
 
 
-Tsurface_GTF = 1; % doesn't matter because all diffusion constants are constant
+%Tsurface_GTF = 1; % doesn't matter because all diffusion constants are constant
                   % must make actual surface temp from initial condition if
                   % you want to have anything in your Conditions folder
                   % be a function of temp
@@ -115,8 +115,8 @@ global vdglobal
 % something for room temperature IF we consider temperature dependent D for
 % the full equations)
 
-
-Dconst_BBC = getDTL(Tsurface_GTF,0);
+Tambient = 300;
+Dconst_BBC = getDTS(Tambient,2);
 
 % bookkeeping
 
@@ -151,13 +151,13 @@ TempThreshold_BBC = 1e-11;
 % choose a diffusion constant for high temp (> 1 = melting temp)
 
 
-Dconst_STA = getDTL(Tsurface_GTF,0);
+Dconst_STA = getDTL(Tsurface_GTF,1);
 % !!!! Not independent of Aparam
 % in non-d form (see 07/27/12)
 
 % reminder: kappatherm measured in units of 10 J/(K m s)
 
-kappatherm = getKappaTherm(Tsurface_GTF,0); % want it in the liquid flag = 0 gives liquid
+kappatherm = getKappaTherm(Tsurface_GTF,1); % want it in the liquid flag = 1 gives liquid
 
 alphaParam_STA = Dconst_STA ./ kappatherm ./Aparam;
 
