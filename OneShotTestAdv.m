@@ -284,8 +284,14 @@ for ii = 1:maxSteps % MAIN LOOP
     plot(xlabmesh,concLab,'b'); % concentration in the solid
     title('concentration (solid)')
     drawnow;    
-  
-%     figure(99)
+%     
+%     figure(99) 
+%     title('D_T(Temp)')
+%     plot(xmesh(1:K1+K2)*h, getKappaTherm(guess2(1:K1+K2), [ones(1, K1) 2*ones(1,K2)]))
+% 
+    axis([0 10 0 2.5]) 
+        drawnow;
+    %   figure(99)
 %     plot(guess2(1:K1+K2),'r'); % Temperature
 %   
 %    min(guess2(1:K1+ceil(2*K2/4)))
