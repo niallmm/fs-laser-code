@@ -20,10 +20,13 @@ function [ KappaThermdTOut ] = getKappaThermdT(Temp, State)
  a = 43.56;
 b = -0.004181;
 c = 2.338;
-
+Tmelt = 1685;    %K
+% Tmelt = 1430; %K amorphous
+Tambiant = 300;  %K  
 % Kout  = a*exp(b*Temp)+c;
+dimenT = (Temp(State==2)*(Tmelt-Tambiant)-Tambiant);
 KappaThermdTOut = zeros(size(Temp));
-KappaThermdTOut(State==2) = a*b*exp(b*Temp(State==2));
+KappaThermdTOut(State==2) = a*b*exp(b*dimenT);
 KappaThermdTOut(State==1) = 0;
 
 
