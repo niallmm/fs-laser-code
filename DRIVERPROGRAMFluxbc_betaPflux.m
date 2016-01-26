@@ -12,13 +12,15 @@ betasweep = linspace(2e8, 1e9, 10);
 
 % for sweep2 = 1:length(Pfluxsweep)
    for sweep1 = 1 %:length(betasweep)
-         beta =  betasweep(sweep1);
+      
+%          beta =  betasweep(sweep1);
+beta = 2e8;
         Pflux = 0.6*2.4;% Pfluxsweep(sweep2)
         sweep2 = 1;
 
     tic
 global xmesh xlabmesh K1 K2 K3 plotflag plotflagIC plotflag_BBC Mu1nm Aparam
-plotflag = 1; % Output of the time integratiom: 0: no output, 1: time integration 2: only for debugging
+plotflag = 0; % Output of the time integratiom: 0: no output, 1: time integration 2: only for debugging
 plotflagIC = 0; % Output for the Short Time Asymptotics
 plotflag_BBC = 0;% Output for the temperature bulk BC during resolidification
 

@@ -12,11 +12,11 @@ global Dconst_STA alphaParam_STA Linfty_STA maxRelError_STA ParamMu_STA  quadgkR
 % =========================================================================
 % generate mesh
 % =========================================================================
-K1 = 400; % no of points in the liquid phase
-% K1 = 900;
+% K1 = 400; % no of points in the liquid phase
+K1 = 900;
 L1 = 1;  % liquid solid boundary in the rescaled coordinates
-K2 = 402; % no of point in the solid phase (for temperature)
-%   K2 = 904;
+% K2 = 402; % no of point in the solid phase (for temperature)
+  K2 = 904;
 L2 = 4e3; % infinity ;-)
 %  L2 = 8e3;
 Z = K1 + K2;

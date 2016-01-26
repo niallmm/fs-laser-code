@@ -1,6 +1,6 @@
 function [ResBCbulkT] = getResidBCbulkTresold(dt,oldh,hguess,TguessS,t_global,ToldCheck)
 
-global Tau_BBC deltaTau_BBC T0fit_BBC x0_BBC lambdafit_BBC Dconst_BBC xinftyTau_deltaTau_BBC curveparam_BBC TempThreshold_BBC plotflag_BBC
+global Tau_BBC deltaTau_BBC T0fit_BBC x0_BBC lambdafit_BBC xinftyTau_deltaTau_BBC curveparam_BBC TempThreshold_BBC plotflag_BBC
 
 global K1 K2 Z L2 xmesh
 
@@ -18,41 +18,16 @@ xeval = hguess * L2;
 
 if (Tau_BBC <= t_global && t_global <Tau_BBC + beta_param * deltaTau_BBC && xeval > xinftyTau_deltaTau_BBC)
     
-%    Ttarget = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC ) ...
-%              .* exp(Dconst_BBC ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC))
+    TimeDependence = exp(getDTS(TguessS(K2),2)./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
 
-    
-    TimeDependence = exp(Dconst_BBC ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
-    
- %   Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC )
     Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC + curveparam_BBC.*(xeval - x0_BBC).^2 );
     Ttarget = Ttau .* TimeDependence;
-    
-          
- %   figure(129)
-    %subplot(1,2,1)
- %   hold on
- %   plot(xeval - x0_BBC,log(Ttarget),'xr')
-   
-%    figure(130)
-%    subplot(1,2,2)
-%hold on
-%    plot(t_global-Tau_BBC,TimeDependence-1.0,'x')
-    
-    
-    
-    
-          
+             
 else
     
    % renew the approximation
     Tau_BBC = t_global;
-
-    %deltaTau_BBC = 10;
-    
     deltaX = 200;
-
-    
     xinftyTau = L2.* hguess;
     
     
@@ -88,7 +63,7 @@ else
     paramlarge = 10;
     parammoderate = 2;
     
-    deltaTau_BBC = 1./paramlarge * lambdafit_BBC * lambdafit_BBC ./Dconst_BBC ;
+    deltaTau_BBC = 1./paramlarge * lambdafit_BBC * lambdafit_BBC ./getDTS(TguessS(K2),2) ;
 
     
     check1 = K2 - xinfty_later_index > 8; % enough points for a fit
@@ -184,7 +159,7 @@ else
 
    %pause
         
-       TimeDependence = exp(Dconst_BBC ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
+       TimeDependence = exp(getDTS(TguessS(K2),2) ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
     
  %   Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC )
     Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC + curveparam_BBC.*(xeval - x0_BBC).^2 );
