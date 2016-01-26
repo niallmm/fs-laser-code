@@ -23,10 +23,25 @@ if (Tau_BBC <= t_global && t_global <Tau_BBC + beta_param * deltaTau_BBC && xeva
 
     
     TimeDependence = exp(Dconst_BBC ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
-
+    
+ %   Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC )
     Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC + curveparam_BBC.*(xeval - x0_BBC).^2 );
     Ttarget = Ttau .* TimeDependence;
-     
+    
+          
+ %   figure(129)
+    %subplot(1,2,1)
+ %   hold on
+ %   plot(xeval - x0_BBC,log(Ttarget),'xr')
+   
+%    figure(130)
+%    subplot(1,2,2)
+%hold on
+%    plot(t_global-Tau_BBC,TimeDependence-1.0,'x')
+    
+    
+    
+    
           
 else
     
@@ -73,7 +88,7 @@ else
     paramlarge = 10;
     parammoderate = 2;
     
-    deltaTau_BBC = 1./paramlarge * lambdafit_BBC * lambdafit_BBC ./getDTS(TguessS(K2),2) ;
+    deltaTau_BBC = 1./paramlarge * lambdafit_BBC * lambdafit_BBC ./Dconst_BBC ;
 
     
     check1 = K2 - xinfty_later_index > 8; % enough points for a fit
@@ -169,7 +184,7 @@ else
 
    %pause
         
-       TimeDependence = exp(getDTS(TguessS(K),2) ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
+       TimeDependence = exp(Dconst_BBC ./ lambdafit_BBC ./lambdafit_BBC  .*(t_global - Tau_BBC));
     
  %   Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC )
     Ttau = T0fit_BBC .* exp( - (xeval - x0_BBC)./lambdafit_BBC + curveparam_BBC.*(xeval - x0_BBC).^2 );

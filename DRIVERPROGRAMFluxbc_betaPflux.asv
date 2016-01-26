@@ -11,7 +11,7 @@ mkdir(foldername)
 betasweep = linspace(2e8, 1e9, 10); 
 
 % for sweep2 = 1:length(Pfluxsweep)
-   for sweep1 = 1 %:length(betasweep)
+   for sweep1 = 1:length(betasweep)
          beta =  betasweep(sweep1);
         Pflux = 0.6*2.4;% Pfluxsweep(sweep2)
         sweep2 = 1;
